@@ -1,7 +1,11 @@
-tensorflow==2.12.0
+# Use >=2.12 for local run (2.12 not available on all platforms)
+tensorflow>=2.12,<2.21
 pandas 
 dvc
-mlflow==2.2.2
+mlflow>=2.9
+opentelemetry-api
+opentelemetry-sdk
+cachetools
 notebook
 numpy
 matplotlib

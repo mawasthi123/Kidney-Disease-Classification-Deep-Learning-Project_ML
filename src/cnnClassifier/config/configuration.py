@@ -1,3 +1,4 @@
+from pathlib import Path
 from cnnClassifier.constants import *
 import os
 from cnnClassifier.utils.common import read_yaml, create_directories,save_json
@@ -75,7 +76,8 @@ class ConfigurationManager:
             params_epochs=params.EPOCHS,
             params_batch_size=params.BATCH_SIZE,
             params_is_augmentation=params.AUGMENTATION,
-            params_image_size=params.IMAGE_SIZE
+            params_image_size=params.IMAGE_SIZE,
+            params_learning_rate=params.LEARNING_RATE,
         )
 
         return training_config
@@ -83,10 +85,12 @@ class ConfigurationManager:
 
 
     def get_evaluation_config(self) -> EvaluationConfig:
+        # Use MLFLOW_TRACKING_URI for local (e.g. ./mlruns); else Dagshub or other remote
+        mlflow_uri = os.environ.get("MLFLOW_TRACKING_URI", "file:./mlruns")
         eval_config = EvaluationConfig(
-            path_of_model="artifacts/training/model.h5",
-            training_data="artifacts/data_ingestion/kidney-ct-scan-image",
-            mlflow_uri="https://dagshub.com/entbappy/Kidney-Disease-Classification-MLflow-DVC.mlflow",
+            path_of_model=Path("artifacts/training/model.h5"),
+            training_data=Path("artifacts/data_ingestion/kidney-ct-scan-image"),
+            mlflow_uri=mlflow_uri,
             all_params=self.params,
             params_image_size=self.params.IMAGE_SIZE,
             params_batch_size=self.params.BATCH_SIZE

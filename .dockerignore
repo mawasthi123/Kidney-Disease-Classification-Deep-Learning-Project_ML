@@ -1,0 +1,14 @@
+.venv
+venv
+__pycache__
+.git
+.gitignore
+*.pyc
+.mypy_cache
+.pytest_cache
+mlruns
+*.md
+!README.md
+.dvc
+research
+*.ipynb

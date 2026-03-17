@@ -14,7 +14,8 @@ class Training:
     
     def get_base_model(self):
         self.model = tf.keras.models.load_model(
-            self.config.updated_base_model_path
+            self.config.updated_base_model_path,
+            compile=False,
         )
 
     def train_valid_generator(self):
@@ -72,6 +73,13 @@ class Training:
     def train(self):
         self.steps_per_epoch = self.train_generator.samples // self.train_generator.batch_size
         self.validation_steps = self.valid_generator.samples // self.valid_generator.batch_size
+
+        # Keras 3: model loaded with compile=False must be compiled before fit()
+        self.model.compile(
+            optimizer=tf.keras.optimizers.SGD(learning_rate=self.config.params_learning_rate),
+            loss=tf.keras.losses.CategoricalCrossentropy(),
+            metrics=["accuracy"],
+        )
 
         self.model.fit(
             self.train_generator,

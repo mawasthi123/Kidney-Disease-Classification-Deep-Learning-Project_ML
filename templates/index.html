@@ -180,12 +180,17 @@ function sendRequest(base64Data){
 					$(".res-part").html("");
 					$(".res-part2").html("");
 					try{
-						var imageData = res[1].image;
-						if(imageData.length > 100){
-							if(imageData.length > 10){$(".res-part2").append("<img class='resp-img' src='data:image/jpeg;base64," + imageData + "' alt='' />");}
+						if (res && res[0]) {
+							var r = res[0];
+							var pred = r.image || "—";
+							var conf = r.confidence != null ? (r.confidence * 100).toFixed(1) + "%" : "";
+							$(".res-part").html("<p class='mb-2'><strong>Prediction: " + pred + "</strong></p>" + (conf ? "<p>Confidence: " + conf + "</p>" : "") + "<pre>" + JSON.stringify(r, undefined, 2) + "</pre>");
+						} else {
+							$(".res-part").html("<pre>" + JSON.stringify(res, undefined, 2) + "</pre>");
 						}
-					}catch(e){}
-					$(".res-part").html("<pre>" + JSON.stringify(res[0], undefined, 2) + "</pre>");
+					} catch(e) {
+						$(".res-part").html("<pre>" + JSON.stringify(res, undefined, 2) + "</pre>");
+					}
 					$("#loading").hide();
 				}
 			});
